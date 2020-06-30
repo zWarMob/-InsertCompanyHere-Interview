@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncLogInterface.cs" />
+    <Compile Include="FileLogger.cs" />
     <Compile Include="LogInterface.cs" />
     <Compile Include="LogLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

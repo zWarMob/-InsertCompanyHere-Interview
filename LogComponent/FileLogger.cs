@@ -13,94 +13,61 @@
     {
         private readonly ConcurrentBag<LogLine> Lines = new ConcurrentBag<LogLine>();
 
-        private readonly Thread _runThread;
         private StreamWriter _writer;
+        private int _curDay;
+
+        private readonly Thread _runThread;
         private bool _exit;
-
-
-
-
-        public FileLogger()
-        {
-            if (!Directory.Exists(@"C:\LogTest")) 
-                Directory.CreateDirectory(@"C:\LogTest");
-
-            this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
-            
-            this._writer.Write("Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine);
-
-            this._writer.AutoFlush = true;
-
-            this._runThread = new Thread(this.MainLoop);
-            this._runThread.Start();
-        }
-
-        private bool _QuitWithFlush = false;
-
-
-        DateTime _curDate = DateTime.Now;
-
 
 
         private void MainLoop()
         {
             while (!this._exit)
             {
-                if (this.Lines.Count > 0)
+                Thread.Sleep(1000); //check every second for any new lines, if we have finished logging
+
+                if (_curDay != DateTime.Now.Day)
                 {
-                    int f = 0;
-                    List<LogLine> _handled = new List<LogLine>();
+                    CreateNewStreamWriter();
+                }
 
-                    foreach (LogLine logLine in this.Lines)
+                if (this.Lines.Any())
+                {
+                    while (this.Lines.TryTake(out LogLine logLine))
                     {
-                        f++;
+                        this._writer.Write(logLine);
 
-                        if (f > 5)
-                            continue;
-                        
-                        if (!this._exit || this._QuitWithFlush)
-                        {
-                            _handled.Add(logLine);
-
-                            StringBuilder stringBuilder = new StringBuilder();
-
-                            if ((DateTime.Now - _curDate).Days != 0)
-                            {
-                                _curDate = DateTime.Now;
-
-                                this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
-
-                                this._writer.Write("Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine);
-
-                                stringBuilder.Append(Environment.NewLine);
-
-                                this._writer.Write(stringBuilder.ToString());
-
-                                this._writer.AutoFlush = true;
-                            }
-
-                            stringBuilder.Append(logLine.Timestamp.ToString("yyyy-MM-dd HH:mm:ss:fff"));
-                            stringBuilder.Append("\t");
-                            stringBuilder.Append(logLine.LineText());
-                            stringBuilder.Append("\t");
-
-                            stringBuilder.Append(Environment.NewLine);
-
-                            this._writer.Write(stringBuilder.ToString());
-                        }
+                        // slow down the logger so it collects unlogged lines in memory
+                        //Moved elsewhere. Some initialization on the logger with options can be set. Good for tests
+                        //Thread.Sleep(500); 
                     }
-
-                    for (int y = 0; y < _handled.Count; y++)
-                    {
-                        //this.Lines.Remove(_handled[y]);   
-                    }
-
-                    if (this._QuitWithFlush == true && this.Lines.Count == 0) 
-                        this._exit = true;
-
-                    Thread.Sleep(50);
                 }
             }
+        }
+
+        /// <summary>
+        /// update 
+        /// </summary>
+        private void CreateNewStreamWriter()
+        {
+            _curDay = DateTime.Now.Day;
+
+            this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
+
+            this._writer.Write("Timestamp".PadRight(LogLine.timestampFormat.Length, ' ') + "\t" + "Data" + Environment.NewLine);
+
+            this._writer.AutoFlush = true;
+        }
+
+        public FileLogger()
+        {
+            if (!Directory.Exists(@"C:\LogTest"))
+                Directory.CreateDirectory(@"C:\LogTest");
+
+            CreateNewStreamWriter();
+
+            this._runThread = new Thread(this.MainLoop);
+            this._runThread.Start();
         }
 
         public void Stop_Without_Flush()
@@ -115,17 +82,17 @@
 
         public Task Stop_With_Flush()
         {
-            this._QuitWithFlush = true;
-
-            return Task.Run(() => {
+            return Task.Run(() =>
+            {
                 while (Lines.Any())
                     Thread.Sleep(500);
+                this._exit = true;
             });
         }
 
         public void WriteLog(string s)
         {
-            this.Lines.Add(new LogLine() { Text = s, Timestamp = DateTime.Now });
+            this.Lines.Add(new LogLine(s));
         }
     }
 }

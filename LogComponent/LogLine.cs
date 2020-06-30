@@ -14,39 +14,33 @@
 
         #region Constructors
 
-        public LogLine()
+        public LogLine(string text)
         {
-            this.Text = "";
+            this.Text = text;
+            this.Timestamp = DateTime.Now;
         }
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>
-        /// Return a formatted line
-        /// </summary>
-        /// <returns></returns>
-        public virtual string LineText()
+        public const string timestampFormat = "yyyy-MM-dd HH:mm:ss:fff";
+
+        public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            return this.ToString(timestampFormat);
+        }
 
-            if (this.Text.Length > 0)
-            {
-                sb.Append(this.Text);
-                sb.Append(". ");
-            }
-
-            sb.Append(this.CreateLineText());
+        public string ToString(string timestampFormat)
+        {
+            StringBuilder sb = new StringBuilder(this.Timestamp.ToString(timestampFormat));
+            sb.Append("\t");
+            sb.Append(this.Text);
+            sb.Append(".");
+            sb.Append(Environment.NewLine);
 
             return sb.ToString();
         }
-
-        public virtual string CreateLineText()
-        {
-            return "";
-        }
-
 
         #endregion
 
