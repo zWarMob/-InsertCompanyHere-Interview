@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
 
     public class AsyncLogInterface : LogInterface
     {
@@ -101,9 +103,19 @@
             this._exit = true;
         }
 
-        public void Stop_With_Flush()
+        public async void Stop_With_Flush(object sender, EventArgs e)
+        {
+            await Stop_With_Flush();
+        }
+
+        public Task Stop_With_Flush()
         {
             this._QuitWithFlush = true;
+
+            return Task.Run(() => {
+                while (_lines.Any())
+                    Thread.Sleep(500);
+            });
         }
 
         public void WriteLog(string s)

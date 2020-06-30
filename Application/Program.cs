@@ -25,6 +25,7 @@ namespace LogUsers
             logger.Stop_With_Flush();
 
             LogInterface logger2 = new AsyncLogInterface();
+            AppDomain.CurrentDomain.ProcessExit += logger2.Stop_With_Flush;
 
             for (int i = 50; i > 0; i--)
             {
