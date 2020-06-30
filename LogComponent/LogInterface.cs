@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace LogTest
 {
-    public interface LogInterface
+    public interface ILogger
     {
         /// <summary>
         /// Stop the logging. If any outstadning logs theses will not be written to Log

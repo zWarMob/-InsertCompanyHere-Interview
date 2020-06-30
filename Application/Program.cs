@@ -14,7 +14,7 @@ namespace LogUsers
     {
         static void Main(string[] args)
         {
-            LogInterface  logger = new AsyncLogInterface();
+            ILogger  logger = new FileLogger();
 
             for (int i = 0; i < 15; i++)
             {
@@ -24,7 +24,7 @@ namespace LogUsers
 
             logger.Stop_With_Flush();
 
-            LogInterface logger2 = new AsyncLogInterface();
+            ILogger logger2 = new FileLogger();
             AppDomain.CurrentDomain.ProcessExit += logger2.Stop_With_Flush;
 
             for (int i = 50; i > 0; i--)

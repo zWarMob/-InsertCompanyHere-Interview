@@ -1,6 +1,7 @@
 ﻿namespace LogTest
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -8,16 +9,18 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class AsyncLogInterface : LogInterface
+    public class FileLogger : ILogger
     {
-        private Thread _runThread;
-        private List<LogLine> _lines = new List<LogLine>();
+        private readonly ConcurrentBag<LogLine> Lines = new ConcurrentBag<LogLine>();
 
-        private StreamWriter _writer; 
-
+        private readonly Thread _runThread;
+        private StreamWriter _writer;
         private bool _exit;
 
-        public AsyncLogInterface()
+
+
+
+        public FileLogger()
         {
             if (!Directory.Exists(@"C:\LogTest")) 
                 Directory.CreateDirectory(@"C:\LogTest");
@@ -37,16 +40,18 @@
 
         DateTime _curDate = DateTime.Now;
 
+
+
         private void MainLoop()
         {
             while (!this._exit)
             {
-                if (this._lines.Count > 0)
+                if (this.Lines.Count > 0)
                 {
                     int f = 0;
                     List<LogLine> _handled = new List<LogLine>();
 
-                    foreach (LogLine logLine in this._lines)
+                    foreach (LogLine logLine in this.Lines)
                     {
                         f++;
 
@@ -87,10 +92,10 @@
 
                     for (int y = 0; y < _handled.Count; y++)
                     {
-                        this._lines.Remove(_handled[y]);   
+                        //this.Lines.Remove(_handled[y]);   
                     }
 
-                    if (this._QuitWithFlush == true && this._lines.Count == 0) 
+                    if (this._QuitWithFlush == true && this.Lines.Count == 0) 
                         this._exit = true;
 
                     Thread.Sleep(50);
@@ -113,14 +118,14 @@
             this._QuitWithFlush = true;
 
             return Task.Run(() => {
-                while (_lines.Any())
+                while (Lines.Any())
                     Thread.Sleep(500);
             });
         }
 
         public void WriteLog(string s)
         {
-            this._lines.Add(new LogLine() { Text = s, Timestamp = DateTime.Now });
+            this.Lines.Add(new LogLine() { Text = s, Timestamp = DateTime.Now });
         }
     }
 }
