@@ -25,7 +25,7 @@
         {
             while (!this._stop)
             {
-                if (_curDay != DateTime.Now.Day)
+                if (_curDay != _dateTimeProvider.Now.Day)
                 {
                     CreateNewStreamWriter();
                 }
@@ -43,6 +43,11 @@
                         this._writer.Write(logLine);
                     }
                 }
+                else if (_forceStop)
+                {
+                    this._writer.Close();
+                    return;
+                }
             }
 
             this._writer.Close();
@@ -53,6 +58,9 @@
         /// </summary>
         private void CreateNewStreamWriter()
         {
+            if (_writer != null)
+                _writer.Close();
+
             _curDay = _dateTimeProvider.Now.Day;
 
             OpenLogFileName = @"Log" + _dateTimeProvider.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
