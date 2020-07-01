@@ -1,3 +1,5 @@
 ﻿.vs/MobilePay.CodeTests.Backend.DK/v16
 Application/obj/Debug
 LogComponent/obj/Debug
+Application/bin
+LogComponent/bin
