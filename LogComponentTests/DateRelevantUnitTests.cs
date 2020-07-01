@@ -1,5 +1,4 @@
-﻿using LogComponent;
-using LogComponentCore.DateTimeProvider;
+﻿using LogComponentCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

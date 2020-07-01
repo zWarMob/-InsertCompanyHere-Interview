@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using LogComponentCore;
 
 namespace LogUsers
 {
-    using System.Threading;
-
-    using LogTest;
-
     class Program
     {
         static void Main(string[] args)
         {
-            ILogger  logger = new FileLogger();
+            FileLogger  logger = new FileLogger();
 
             for (int i = 0; i < 15; i++)
             {

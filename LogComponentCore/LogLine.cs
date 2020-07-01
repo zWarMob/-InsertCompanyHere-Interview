@@ -1,4 +1,4 @@
-﻿namespace LogComponent
+﻿namespace LogComponentCore
 {
     using System;
     using System.Text;

@@ -1,4 +1,4 @@
-using LogComponent;
+using LogComponentCore;
 using NUnit.Framework;
 using System;
 using System.IO;

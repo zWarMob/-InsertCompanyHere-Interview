@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "DH2NTLbN1J0XQboYKWnWlsQtEmJdP4VXV/X/hmZl5KQ6nE56a+paxDUq2IZ9JmUmWlh1eiBjee9SuQye5dBnxA==",
+  "dgSpecHash": "oV6jAEiZEfAhLN8wkkZf9CROsXdHNQYSBUjuzxMKVtdBq0/4sZlld2CpEzQWg3chBCHDEOONF2/paKlhgSnUoA==",
   "success": true,
   "projectFilePath": "D:\\Work - SideQuests\\JobSearch\\MobilePay\\Interview\\MobilePayInterview\\LogComponentCore\\LogComponentCore.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Petyo\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Petyo\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

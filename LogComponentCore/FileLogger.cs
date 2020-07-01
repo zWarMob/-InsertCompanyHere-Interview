@@ -1,12 +1,11 @@
-﻿namespace LogComponent
-{
-    using LogComponentCore.DateTimeProvider;
-    using System;
-    using System.Collections.Concurrent;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
+﻿using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Threading;
 
+namespace LogComponentCore
+{
     public class FileLogger : ILogger
     {
         public readonly ConcurrentBag<LogLine> Lines = new ConcurrentBag<LogLine>();
