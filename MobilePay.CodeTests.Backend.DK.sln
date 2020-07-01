@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogComponent", "LogComponent\LogComponent.csproj", "{EE0CC7D7-A1A0-4A16-80E5-8B80B480EB47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogComponentTests", "LogComponentTests\LogComponentTests.csproj", "{C2046D13-801C-472B-8D2E-58C6BEF6AF08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogComponentCore", "LogComponentCore\LogComponentCore.csproj", "{958FF2C4-3FB0-44AA-B5DC-0A3AA66B038D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{EE0CC7D7-A1A0-4A16-80E5-8B80B480EB47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0CC7D7-A1A0-4A16-80E5-8B80B480EB47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0CC7D7-A1A0-4A16-80E5-8B80B480EB47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2046D13-801C-472B-8D2E-58C6BEF6AF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2046D13-801C-472B-8D2E-58C6BEF6AF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2046D13-801C-472B-8D2E-58C6BEF6AF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2046D13-801C-472B-8D2E-58C6BEF6AF08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{958FF2C4-3FB0-44AA-B5DC-0A3AA66B038D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{958FF2C4-3FB0-44AA-B5DC-0A3AA66B038D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{958FF2C4-3FB0-44AA-B5DC-0A3AA66B038D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{958FF2C4-3FB0-44AA-B5DC-0A3AA66B038D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
