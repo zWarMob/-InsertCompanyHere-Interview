@@ -16,6 +16,17 @@ namespace LogComponentTests
             logger = new FileLogger();
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            DirectoryInfo di = new DirectoryInfo(logger.LogPath);
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+
         [Test]
         public void FieLogger_Log()
         {
@@ -34,6 +45,8 @@ namespace LogComponentTests
             var file = (File.OpenText(Path.Combine(logger.LogPath, logger.OpenLogFileName)));
 
             var content = file.ReadToEnd();
+
+            file.Close();
 
             Assert.IsTrue(content.EndsWith(expectedContent));
         }
@@ -59,6 +72,8 @@ namespace LogComponentTests
             var file = (File.OpenText(Path.Combine(logger.LogPath, logger.OpenLogFileName)));
 
             var content = file.ReadToEnd();
+            
+            file.Close();
 
             Assert.IsTrue(content.EndsWith(expectedContent));
         }
@@ -84,14 +99,10 @@ namespace LogComponentTests
             var file = (File.OpenText(Path.Combine(logger.LogPath, logger.OpenLogFileName)));
 
             var content = file.ReadToEnd();
+            
+            file.Close();
 
             Assert.IsFalse(content.EndsWith(expectedContent));
-        }
-
-        [Test]
-        public void FileLogger_CreateNewFileAtMidnight()
-        {
-
         }
     }
 }
