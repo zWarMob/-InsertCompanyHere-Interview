@@ -3,3 +3,9 @@ Application/obj/Debug
 LogComponent/obj/Debug
 Application/bin
 LogComponent/bin
+.vs
+LogComponentCore/bin
+LogComponentCore/obj/Debug
+LogComponentCore/obj/Debug
+LogComponentTests/bin/Debug
+LogComponentTests/obj/Debug
