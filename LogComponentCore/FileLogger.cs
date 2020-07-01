@@ -23,8 +23,6 @@
         {
             while (!this._stop)
             {
-                Thread.Sleep(1000); //check every second for any new lines, if we have finished logging
-
                 if (_curDay != DateTime.Now.Day)
                 {
                     CreateNewStreamWriter();
@@ -35,12 +33,17 @@
                     while (this.Lines.TryTake(out LogLine logLine))
                     {
                         if (_forceStop)
+                        {
+                            this._writer.Close();
                             return;
+                        }
 
                         this._writer.Write(logLine);
                     }
                 }
             }
+
+            this._writer.Close();
         }
 
         /// <summary>
@@ -50,7 +53,7 @@
         {
             _curDay = DateTime.Now.Day;
 
-            var OpenLogFileName = @"Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
+            OpenLogFileName = @"Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
 
             this._writer = File.AppendText(Path.Combine(LogPath, OpenLogFileName));
 
