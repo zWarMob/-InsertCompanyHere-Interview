@@ -11,18 +11,19 @@
 
     public class FileLogger : ILogger
     {
-        private readonly ConcurrentBag<LogLine> Lines = new ConcurrentBag<LogLine>();
+        public readonly ConcurrentBag<LogLine> Lines = new ConcurrentBag<LogLine>();
 
+        private string _logPath = @"C:\LogTest";
+        private readonly Thread _runThread;
         private StreamWriter _writer;
         private int _curDay;
-
-        private readonly Thread _runThread;
-        private bool _exit;
+        private bool _stop;
+        private bool _forceStop;
 
 
         private void MainLoop()
         {
-            while (!this._exit)
+            while (!this._stop)
             {
                 Thread.Sleep(1000); //check every second for any new lines, if we have finished logging
 
@@ -35,24 +36,25 @@
                 {
                     while (this.Lines.TryTake(out LogLine logLine))
                     {
-                        this._writer.Write(logLine);
+                        if (_forceStop)
+                            return;
 
-                        // slow down the logger so it collects unlogged lines in memory
-                        //Moved elsewhere. Some initialization on the logger with options can be set. Good for tests
-                        //Thread.Sleep(500); 
+                        this._writer.Write(logLine);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// update 
+        /// Create a new file with the current timestamp. _writer references the new stream
         /// </summary>
         private void CreateNewStreamWriter()
         {
             _curDay = DateTime.Now.Day;
 
-            this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
+            var filename = @"Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
+
+            this._writer = File.AppendText(Path.Combine(_logPath, filename));
 
             this._writer.Write("Timestamp".PadRight(LogLine.timestampFormat.Length, ' ') + "\t" + "Data" + Environment.NewLine);
 
@@ -61,8 +63,8 @@
 
         public FileLogger()
         {
-            if (!Directory.Exists(@"C:\LogTest"))
-                Directory.CreateDirectory(@"C:\LogTest");
+            if (!Directory.Exists(_logPath))
+                Directory.CreateDirectory(_logPath);
 
             CreateNewStreamWriter();
 
@@ -72,22 +74,17 @@
 
         public void Stop_Without_Flush()
         {
-            this._exit = true;
+            this._forceStop = true;
         }
 
-        public async void Stop_With_Flush(object sender, EventArgs e)
+        public void Stop_With_Flush(object sender, EventArgs e)
         {
-            await Stop_With_Flush();
+            Stop_With_Flush();
         }
 
-        public Task Stop_With_Flush()
+        public void Stop_With_Flush()
         {
-            return Task.Run(() =>
-            {
-                while (Lines.Any())
-                    Thread.Sleep(500);
-                this._exit = true;
-            });
+            this._stop = true;
         }
 
         public void WriteLog(string s)
