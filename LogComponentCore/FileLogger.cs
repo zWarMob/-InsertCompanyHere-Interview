@@ -23,34 +23,34 @@
 
         private void MainLoop()
         {
-            while (!this._stop)
+            while (!_stop)
             {
                 if (_curDay != _dateTimeProvider.Now.Day)
                 {
                     CreateNewStreamWriter();
                 }
 
-                if (this.Lines.Any())
+                if (Lines.Any())
                 {
-                    while (this.Lines.TryTake(out LogLine logLine))
+                    while (Lines.TryTake(out LogLine logLine))
                     {
                         if (_forceStop)
                         {
-                            this._writer.Close();
+                            _writer.Close();
                             return;
                         }
 
-                        this._writer.Write(logLine);
+                        _writer.Write(logLine);
                     }
                 }
                 else if (_forceStop)
                 {
-                    this._writer.Close();
+                    _writer.Close();
                     return;
                 }
             }
 
-            this._writer.Close();
+            _writer.Close();
         }
 
         /// <summary>
@@ -65,30 +65,30 @@
 
             OpenLogFileName = @"Log" + _dateTimeProvider.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
 
-            this._writer = File.AppendText(Path.Combine(LogPath, OpenLogFileName));
+            _writer = File.AppendText(Path.Combine(LogPath, OpenLogFileName));
 
-            this._writer.Write("Timestamp".PadRight(LogLine.timestampFormat.Length, ' ') + "\t" + "Data" + Environment.NewLine);
+            _writer.Write("Timestamp".PadRight(LogLine.timestampFormat.Length, ' ') + "\t" + "Data" + Environment.NewLine);
 
-            this._writer.AutoFlush = true;
+            _writer.AutoFlush = true;
         }
 
         public FileLogger(DateTimeProvider dateTimeProvider)
         {
-            this._dateTimeProvider = dateTimeProvider;
+            _dateTimeProvider = dateTimeProvider;
 
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
 
             CreateNewStreamWriter();
 
-            this._runThread = new Thread(this.MainLoop);
-            this._runThread.Start();
+            _runThread = new Thread(MainLoop);
+            _runThread.Start();
         }
         public FileLogger() : this(new DateTimeProvider(DateTime.Now)) { }
 
         public void Stop_Without_Flush()
         {
-            this._forceStop = true;
+            _forceStop = true;
         }
 
         public void Stop_With_Flush(object sender, EventArgs e)
@@ -98,12 +98,12 @@
 
         public void Stop_With_Flush()
         {
-            this._stop = true;
+            _stop = true;
         }
 
         public void WriteLog(string s)
         {
-            this.Lines.Add(new LogLine(s));
+            Lines.Add(new LogLine(s));
         }
     }
 }
