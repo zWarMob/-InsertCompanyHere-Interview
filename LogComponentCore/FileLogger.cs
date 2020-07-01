@@ -1,5 +1,6 @@
 ﻿namespace LogComponent
 {
+    using LogComponentCore.DateTimeProvider;
     using System;
     using System.Collections.Concurrent;
     using System.IO;
@@ -12,6 +13,7 @@
         public string LogPath = @"C:\LogTest";
         public string OpenLogFileName;
 
+        private DateTimeProvider _dateTimeProvider;
         private readonly Thread _runThread;
         private StreamWriter _writer;
         private int _curDay;
@@ -51,9 +53,9 @@
         /// </summary>
         private void CreateNewStreamWriter()
         {
-            _curDay = DateTime.Now.Day;
+            _curDay = _dateTimeProvider.Now.Day;
 
-            OpenLogFileName = @"Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
+            OpenLogFileName = @"Log" + _dateTimeProvider.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
 
             this._writer = File.AppendText(Path.Combine(LogPath, OpenLogFileName));
 
@@ -62,8 +64,10 @@
             this._writer.AutoFlush = true;
         }
 
-        public FileLogger()
+        public FileLogger(DateTimeProvider dateTimeProvider)
         {
+            this._dateTimeProvider = dateTimeProvider;
+
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
 
@@ -72,6 +76,7 @@
             this._runThread = new Thread(this.MainLoop);
             this._runThread.Start();
         }
+        public FileLogger() : this(new DateTimeProvider(DateTime.Now)) { }
 
         public void Stop_Without_Flush()
         {
