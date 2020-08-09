@@ -1,4 +1,4 @@
-# MobilePay Code Test
+# [InsertCompanyHere] Code Test
 The code test for new applicants.
 
 Read the task description thoroughly and create a branch with your solution.
